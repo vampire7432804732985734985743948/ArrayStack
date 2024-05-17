@@ -1,20 +1,35 @@
-﻿using Problem.LinkedList;
-using Problem.Stack;
+﻿using Problem.Stack;
+using Problem.graph;
 using Problem;
+using Problem.Set;
 
-ArrayStack<int> arrayStack = new ArrayStack<int>(10);
+Graph graph = new Graph();
 
-arrayStack.Push(8790);
-arrayStack.Push(1);
-arrayStack.Push(424323);
-arrayStack.Push(3);
-arrayStack.Push(4);
-arrayStack.Push(5);
-arrayStack.Push(6);
+Vertex vertex0 = new Vertex(0);
+Vertex vertex1 = new Vertex(1);
+Vertex vertex2 = new Vertex(2);
+Vertex vertex3 = new Vertex(3);
+Vertex vertex4 = new Vertex(4);
 
+graph.AddVertex(vertex0);
+graph.AddVertex(vertex1);
+graph.AddVertex(vertex2);
+graph.AddVertex(vertex3);
 
-FindSmallestElement findSmallestElement = new FindSmallestElement(arrayStack);
-findSmallestElement.ShowStack();
+graph.CreateEdge(vertex0, vertex1);
+graph.CreateEdge(vertex1, vertex2);
+graph.CreateEdge(vertex2, vertex3);
+graph.CreateEdge(vertex3, vertex1);
 
-Console.WriteLine($"The biggest element: {findSmallestElement.FindTheBiggestElement()}");
-Console.WriteLine($"The smallest element: {findSmallestElement.FindTheSmallestElement()}");
+var matrix = graph.GenerateMatrix();
+
+for (int i = 0; i < graph.VerticesCount; i++)
+{
+	for (int j = 0; j < graph.EdgesCount; j++)
+	{
+        Console.Write(matrix[i,j] + " ");
+    }
+    Console.WriteLine();
+}
+
+graph.GetList();
