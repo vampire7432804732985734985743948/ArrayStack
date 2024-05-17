@@ -50,13 +50,19 @@ namespace Problem.graph
         public List<Vertex> GenerateList(Vertex vertex)
         {
             var adjacencyList = new List<Vertex>();
-
-            foreach (var edge in _edges)
+            if (_edges.Count > 0)
             {
-                if (edge.From == vertex)
+                foreach (var edge in _edges)
                 {
-                    adjacencyList.Add(edge.To);
+                    if (edge.From == vertex && vertex != null)
+                    {
+                        adjacencyList.Add(edge.To);
+                    }
                 }
+            }
+            else
+            {
+                throw new ArgumentException("The graph isn't connected");
             }
             return adjacencyList;
         }

@@ -1,7 +1,6 @@
 ﻿using Problem.Stack;
 using Problem.graph;
 using Problem;
-using Problem.Set;
 
 Graph graph = new Graph();
 
@@ -22,7 +21,7 @@ graph.CreateEdge(vertex2, vertex3);
 graph.CreateEdge(vertex3, vertex1);
 
 var matrix = graph.GenerateMatrix();
-
+Console.WriteLine("matrix");
 for (int i = 0; i < graph.VerticesCount; i++)
 {
 	for (int j = 0; j < graph.EdgesCount; j++)
@@ -31,5 +30,5 @@ for (int i = 0; i < graph.VerticesCount; i++)
     }
     Console.WriteLine();
 }
-
+Console.WriteLine("Adjustment List");
 graph.GetList();
