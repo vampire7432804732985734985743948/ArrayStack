@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Problem.List
 {
-    internal class Vector<T> : IEnumerable<Node<T>>
+    internal class Vector<T> : IEnumerable<T>
     {
         private Node<T>[] _elements; 
         public int Count { get; private set; }
@@ -139,11 +139,18 @@ namespace Problem.List
 
         private bool IsEmpty() => _elements == null || _elements.Length == 0 ? true : false;
 
-        public IEnumerator<Node<T>> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
             {
-                yield return _elements[i];
+                if (_elements[i].Data != null)
+                {
+                    yield return _elements[i].Data!;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Data is null at index " + i);
+                }
             }
         }
 

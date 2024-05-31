@@ -20,5 +20,5 @@ Console.WriteLine("_____");
 
 foreach (var i in ints)
 {
-    Console.WriteLine(i.Data);
+    Console.WriteLine(i);
 }
