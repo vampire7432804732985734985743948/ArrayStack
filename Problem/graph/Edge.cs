@@ -9,7 +9,7 @@ namespace Problem.graph
         public Vertex? To { get; private set; }
         public int Weight { get; private set; }
 
-        public Edge(Vertex from, Vertex to, int weight = 1, bool isOriented = false)
+        public Edge(Vertex from, Vertex to, int weight = 1)
         {
             From = from;
             To = to;

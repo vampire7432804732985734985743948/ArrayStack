@@ -22,6 +22,10 @@ namespace Problem.graph
                 _vertices.Add(vertex);
                 VerticesCount++;
             }
+            else
+            {
+                Console.WriteLine("All the objects are to be unique");
+            }
         }
 
         public void CreateEdge(Vertex from, Vertex to, int weight = 1)
@@ -62,7 +66,7 @@ namespace Problem.graph
             }
             else
             {
-                throw new ArgumentException("The graph isn't connected");
+                Console.WriteLine("The graph isn't connected");
             }
             return adjacencyList;
         }
