@@ -7,11 +7,10 @@
         get { return _data; }
         set { _data = value; }
     }
-    public Node<T>? Next { get; set; }
 
     public Node(T? data, int index)
     {
-        Data = data;
+        Data = dataж
         Index = index;
     }
     public Node(T? data)
