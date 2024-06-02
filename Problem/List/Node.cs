@@ -1,4 +1,7 @@
-﻿internal class Node<T>
+﻿using System;
+using System.Collections.Generic;
+
+internal class Node<T>
 {
     private T? _data;
     public int Index { get; private set; }
@@ -10,7 +13,7 @@
 
     public Node(T? data, int index)
     {
-        Data = dataж
+        Data = data;
         Index = index;
     }
     public Node(T? data)

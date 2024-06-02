@@ -2,6 +2,7 @@
 using System.Text;
 using System.ComponentModel;
 using System.Collections;
+using System.Linq;
 
 namespace Problem.List
 {
@@ -26,13 +27,73 @@ namespace Problem.List
                 throw new ArgumentException("Signed list is empty or null");
             }
         }
+        public Vector<T> Union(Vector<T> vector)
+        {
+            Vector<T> result = new Vector<T>();
+
+            foreach (var item in this)
+            {
+                if (item != null && !result.Contains(item))
+                {
+                    result.Add(item);
+                }
+            }
+
+            foreach (var item in vector)
+            {
+                if (item != null && !result.Contains(item))
+                {
+                    result.Add(item);
+                }
+            }
+
+            return result;
+        }
+        public Vector<T> Intersect(Vector<T> vector)
+        {
+            Vector<T> result = new Vector<T>();
+
+            foreach (var item in this)
+            {
+                if (item != null && vector.Contains(item))
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
+        }
+        public Vector<T> Difference(Vector<T> vector)
+        {
+            Vector<T> result = new Vector<T>();
+
+            foreach (var item in this)
+            {
+                if (item != null && !vector.Contains(item))
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
+        }
+        public bool Contains(T data)
+        {
+            foreach (var item in _elements)
+            {
+                if (item != null && item.Data != null && item.Data.Equals(data))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+       
         public void Add(T data)
         {
             if (data != null)
             {
                 if (Count == _elements.Length)
                 {
-                    _elements = RewriteData();
+                    _elements = RearrangeArray();
                 }
                 Node<T> node = new Node<T>(data, Count);
                 _elements[Count] = node;
@@ -61,7 +122,7 @@ namespace Problem.List
         }
         public T? GetFirstElement()
         {
-            if (_elements.Length > 0)
+            if (_elements.Length > 0 && _elements[0] != null)
             {
                 return _elements[0].Data;
             }
@@ -126,7 +187,7 @@ namespace Problem.List
             }
         }
 
-        private Node<T>[] RewriteData()
+        private Node<T>[] RearrangeArray()
         {
             int doubledLength = _elements.Length * 2;
             var redistributedArray = new Node<T>[doubledLength];
