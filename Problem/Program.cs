@@ -5,35 +5,27 @@ using Problem.List;
 using Problem;
 using System.Numerics;
 
-Problem.List.Vector<int> ints = new Problem.List.Vector<int>();
+Problem.graph.Graph graph = new Graph();
 
-ints.Add(1);
-ints.Add(2);
-ints.Add(3);
-ints.Add(4);
-ints.Add(5);
-ints.Add(6);
-ints.Add(7);
-ints.Add(9);
-ints.Add(8);
-
-Problem.List.Vector<int> ints2 = new Problem.List.Vector<int>();
-
-ints2.Add(1);
-ints2.Add(2);
-ints2.Add(3);
-ints2.Add(33);
-ints2.Add(4);
-ints2.Add(5);
-ints2.Add(6);
-ints2.Add(9);
-ints2.Add(8);
+Vertex vertex1 = new Vertex(1);
+Vertex vertex2 = new Vertex(2);
+Vertex vertex3 = new Vertex(3);
+Vertex vertex4 = new Vertex(4);
+Vertex vertex5 = new Vertex(5);
+Vertex vertex6 = new Vertex(6);
 
 
-Problem.List.Vector<int> ints3 = new Problem.List.Vector<int>();
-ints3 = ints.Difference(ints2);
+graph.AddVertex(vertex1);
+graph.AddVertex(vertex2);
+graph.AddVertex(vertex3);
+graph.AddVertex(vertex4);
+graph.AddVertex(vertex5);
+graph.AddVertex(vertex6);
 
-foreach (var i in ints3)
-{
-    Console.WriteLine(i);
-}
+graph.CreateEdge(vertex1, vertex2);
+graph.CreateEdge(vertex1, vertex3);
+graph.CreateEdge(vertex2, vertex4);
+graph.CreateEdge(vertex2, vertex5);
+graph.CreateEdge(vertex4, vertex6);
+
+graph.GetMatrix();

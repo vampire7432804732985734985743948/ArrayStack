@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Problem.graph
 {
@@ -44,14 +45,14 @@ namespace Problem.graph
 
             foreach (var edge in _edges)
             {
-                var row = edge.From.Number;
-                var column = edge.To.Number;
+                var row = edge.From.Number - 1;
+                var column = edge.To.Number - 1;
                 matrix[row, column] = edge.Weight;
             }
             return matrix;
         }
 
-        public List<Vertex> GenerateList(Vertex vertex)
+        private List<Vertex> GenerateList(Vertex vertex)
         {
             var adjacencyList = new List<Vertex>();
             if (_edges.Count > 0)
@@ -79,6 +80,19 @@ namespace Problem.graph
                 foreach (var item in GenerateList(_vertices[i]))
                 {
                     Console.Write($"{item.Number} ");
+                }
+                Console.WriteLine();
+            }
+        }
+        public void GetMatrix()
+        {
+            int[,] matrix = GenerateMatrix();
+            Console.WriteLine("Adjacency Matrix:");
+            for (int i = 0; i < _vertices.Count; i++)
+            {
+                for (int j = 0; j < _vertices.Count; j++)
+                {
+                    Console.Write($"{matrix[i, j]} ");
                 }
                 Console.WriteLine();
             }
