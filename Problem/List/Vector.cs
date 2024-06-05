@@ -2,7 +2,6 @@
 using System.Text;
 using System.ComponentModel;
 using System.Collections;
-using System.Linq;
 
 namespace Problem.List
 {
