@@ -4,7 +4,7 @@ using System.Collections.Generic;
 internal class Node<T>
 {
     private T? _data;
-    public int Index { get; private set; }
+    public int Index { get; set; }
     public T? Data
     {
         get { return _data; }

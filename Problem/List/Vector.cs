@@ -99,6 +99,31 @@ namespace Problem.List
                 Count++;
             }
         }
+
+        public void Insert(T data, int index)
+        {
+            if (data != null && index >= 0 && index <= Count)
+            {
+                if (Count == _elements.Length)
+                {
+                    _elements = RearrangeArray();
+                }
+                for (int i = Count; i > index; i--)
+                {
+                    _elements[i] = _elements[i - 1];
+                }
+                _elements[index] = new Node<T>(data, index);
+                Count++;
+                for (int i = index + 1; i < Count; i++)
+                {
+                    if (_elements[i] != null)
+                    {
+                        _elements[i].Index = i;
+                    }
+                }
+            }
+        }
+
         public T? FindElementById(int target)
         {
             int left = 0;
@@ -119,6 +144,7 @@ namespace Problem.List
             Console.WriteLine(new StringBuilder("Vector is empty"));
             return default(T);
         }
+
         public T? GetFirstElement()
         {
             if (_elements.Length > 0 && _elements[0] != null)
@@ -131,6 +157,7 @@ namespace Problem.List
                 return default(T);
             }
         }
+
         public T? GetLastElement()
         {
             if (_elements.Length > 0)
@@ -143,6 +170,7 @@ namespace Problem.List
                 return default(T);
             }
         }
+
         public void RemoveLast()
         {
             if (Count > 0)
