@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Problem.List
 {
-    internal class Vector<T> : IEnumerable<T>
+    internal class Vector<T> : IEnumerable<T>, IDisposable
     {
         private Node<T>[] _elements; 
 
@@ -308,6 +308,11 @@ namespace Problem.List
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void Dispose()
+        {
+            this.Dispose();
         }
     }
 }

@@ -16,4 +16,4 @@ values.Add(5);
 values.Add(6);
 values.Add(7);
 
-Console.WriteLine(values.Capacity(-2));
+Console.WriteLine(values.GetHashCode());
