@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Problem.Dictionary
 {
@@ -15,27 +16,44 @@ namespace Problem.Dictionary
             {
                 foreach (var item in _items)
                 {
-                    if (!item.Key.Equals(key))
+                    if (item.Key.Equals(key))
                     {
-                        _items.Add(new Node<TKey, TValue>(key, value));
-                        Count = _items.Count;
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Provide another key");
+                        Console.WriteLine( new StringBuilder("Provide another set of values"));
+                        return;
                     }
                 }
+                _items.Add(new Node<TKey, TValue>(key, value));
+                Count = _items.Count;
             }
             else
             {
-                throw new ArgumentNullException("Check your input");
+                Console.WriteLine(new StringBuilder("Check your input"));
+            }
+        }
+        public void OrderByAscending()
+        {
+            if (_items[0].Key is int)
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    for(int j = i + 1; j < Count; j++)
+                    {
+                        if (Convert.ToInt32(_items[i].Key) > Convert.ToInt32(_items[j].Key))
+                        {
+                            var temp = _items[i];
+
+                            _items[i] = _items[j];
+                            _items[j] = temp;
+                        }
+                    }
+                }  
             }
         }
         public void Show()
         {
             foreach (var item in _items)
             {
-                Console.WriteLine($"{item.Key}, {item.Value}");
+                Console.WriteLine($"Key: {item.Key}, Value: {item.Value}");
             }
         }
         public void DeleteByKey(TKey key)

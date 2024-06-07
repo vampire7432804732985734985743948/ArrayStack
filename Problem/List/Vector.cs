@@ -8,6 +8,7 @@ namespace Problem.List
     internal class Vector<T> : IEnumerable<T>
     {
         private Node<T>[] _elements; 
+
         public int Count { get; private set; }
 
         public Vector(int numberOfElements = 1)
@@ -26,6 +27,8 @@ namespace Problem.List
                 throw new ArgumentException("Signed list is empty or null");
             }
         }
+
+
         public Vector<T> Union(Vector<T> vector)
         {
             Vector<T> result = new Vector<T>();
@@ -48,6 +51,7 @@ namespace Problem.List
 
             return result;
         }
+
         public Vector<T> Intersect(Vector<T> vector)
         {
             Vector<T> result = new Vector<T>();
@@ -61,6 +65,7 @@ namespace Problem.List
             }
             return result;
         }
+
         public Vector<T> Difference(Vector<T> vector)
         {
             Vector<T> result = new Vector<T>();
@@ -74,6 +79,7 @@ namespace Problem.List
             }
             return result;
         }
+
         public bool Contains(T data)
         {
             foreach (var item in _elements)
@@ -124,6 +130,41 @@ namespace Problem.List
             }
         }
 
+        public void EraseAt(int index)
+        {
+            if (index < 0 || index >= Count)
+            {
+                Console.WriteLine(new StringBuilder("Index is out of the bounds"));
+            }
+            else
+            {
+                for (int i = index; i < Count - 1; i++)
+                {
+                    _elements[i] = _elements[i + 1];
+                    _elements[i].Index = i;
+                }
+
+                _elements[Count - 1] = new Node<T>(default(T));
+                Count--;
+            }
+        }
+
+        public void EraseFrom(int target)
+        {
+            if (target < 0 || target > Count)
+            {
+                Console.WriteLine(new StringBuilder("Index is out of the bounds"));
+            }
+            else
+            {
+                for (int i = Count; i > target; i--)
+                {
+                    _elements[i] = new Node<T>(default(T));
+                    Count--;
+                }
+            }
+        }
+
         public T? FindElementById(int target)
         {
             int left = 0;
@@ -141,7 +182,7 @@ namespace Problem.List
                 else
                     right = middle - 1;
             }
-            Console.WriteLine(new StringBuilder("Vector is empty"));
+            Console.WriteLine(new StringBuilder("Index is out of the bounds"));
             return default(T);
         }
 
@@ -176,7 +217,7 @@ namespace Problem.List
             if (Count > 0)
             {
                 Count--;
-                _elements[Count] = new Node<T>(default);
+                _elements[Count] = new Node<T>(default(T));
             }
         }
 
@@ -193,11 +234,13 @@ namespace Problem.List
             _elements = new Node<T>[_elements.Length];
             Count = 0;
         }
+
         public void ClearAll()
         {
             _elements = new Node<T>[1];
             Count = 0;
         }
+
         public void Reverse()
         {
             int leftIndex = 0;
