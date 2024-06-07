@@ -5,15 +5,15 @@ using Problem.List;
 using Problem;
 using System.Numerics;
 
-Problem.Dictionary.Dictionary<int, string> dictionary = new Problem.Dictionary.Dictionary<int, string>();
+Problem.List.Vector<int> values = new Problem.List.Vector<int>();
 
+values.Add(0);
+values.Add(1);
+values.Add(2);
+values.Add(3);
+values.Add(4);
+values.Add(5);
+values.Add(6);
+values.Add(7);
 
-dictionary.Add(1, "1");
-dictionary.Add(3, "3");
-dictionary.Add(2, "2");
-dictionary.Add(5, "5");
-dictionary.Add(6, "6");
-dictionary.Add(4, "4");
-
-dictionary.OrderByAscending();
-dictionary.Show();
+Console.WriteLine(values.Capacity(-2));

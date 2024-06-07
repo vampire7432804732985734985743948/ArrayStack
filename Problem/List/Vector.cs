@@ -28,7 +28,6 @@ namespace Problem.List
             }
         }
 
-
         public Vector<T> Union(Vector<T> vector)
         {
             Vector<T> result = new Vector<T>();
@@ -103,6 +102,27 @@ namespace Problem.List
                 Node<T> node = new Node<T>(data, Count);
                 _elements[Count] = node;
                 Count++;
+            }
+        }
+
+        public int Capacity() => _elements.Length - Count;
+
+        public bool Capacity(int requiredElements)
+        {
+            if (requiredElements > 0)
+            {
+                if (_elements.Length - (Count + requiredElements) > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                throw new ArgumentException("The value is out the bounds. It is to be bigger than 0");
             }
         }
 
