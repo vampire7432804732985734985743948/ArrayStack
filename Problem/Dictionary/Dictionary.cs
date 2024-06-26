@@ -49,6 +49,22 @@ namespace Problem.Dictionary
                 }  
             }
         }
+        public int FindTheBiggestNumber(int[] ints)
+        {
+            for (int i = 0; i < ints.Length; i++)
+            {
+                for (int j = i + 1; j < ints.Length; j++)
+                {
+                    if (ints[i] > ints[j])
+                    {
+                        var temp = ints[i];
+                        ints[i] = ints[j];
+                        ints[j] = temp;
+                    }
+                }
+            }
+            return ints[^1];
+        }
         public void Show()
         {
             foreach (var item in _items)

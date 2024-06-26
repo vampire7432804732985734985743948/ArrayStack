@@ -4,16 +4,15 @@ using Problem.Dictionary;
 using Problem.List;
 using Problem;
 using System.Numerics;
+using System.Net.Http.Headers;
 
-Problem.List.Vector<int> values = new Problem.List.Vector<int>();
+Problem.List.Vector<int> values = new Problem.List.Vector<int>() {2,4,7,9,5,1};
 
-values.Add(0);
-values.Add(1);
-values.Add(2);
-values.Add(3);
-values.Add(4);
-values.Add(5);
-values.Add(6);
-values.Add(7);
+values.Sort();
+values.ShowData();
 
-Console.WriteLine(values.GetHashCode());
+Problem.List.Vector<int> values1 = new Problem.List.Vector<int>() { 2, 4, 7, 9, 53, 131 };
+Console.WriteLine("______________");
+values = values.Union(values1);
+
+values.ShowData();

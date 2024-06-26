@@ -105,11 +105,21 @@ namespace Problem.List
             }
         }
 
-        public int Capacity() => _elements.Length - Count;
+        public int Capacity() 
+        {
+            if (_elements.Length > 1 && Count < _elements.Length)
+            {
+                return _elements.Length - Count;
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
         public bool Capacity(int requiredElements)
         {
-            if (requiredElements > 0)
+            if (requiredElements > 0 && _elements.Length > requiredElements)
             {
                 if (_elements.Length - (Count + requiredElements) > 0)
                 {
@@ -122,8 +132,17 @@ namespace Problem.List
             }
             else
             {
-                throw new ArgumentException("The value is out the bounds. It is to be bigger than 0");
+                return false;
             }
+        }
+
+        public int MaxSize() => _elements.Length;
+
+        public void SwapElements(int firstId, int secondId)
+        {
+            var temp = _elements[firstId].Data;
+            _elements[firstId].Data = _elements[secondId].Data;
+            _elements[secondId].Data = temp;
         }
 
         public void Insert(T data, int index)
@@ -204,6 +223,30 @@ namespace Problem.List
             }
             Console.WriteLine(new StringBuilder("Index is out of the bounds"));
             return default(T);
+        }
+
+        public Node<T>[] Sort()
+        {
+            try
+            {
+                for(int i = 0; i < Count; i++)
+                {
+                    for (int j = i + 1; j < Count; j++)
+                    {
+                        if (Convert.ToInt32(_elements[i].Data) > Convert.ToInt32(_elements[j].Data))
+                        {
+                            SwapElements(_elements[i].Index, _elements[j].Index);
+                        }
+                    }
+                }
+
+                return _elements; 
+            }
+            catch (InvalidCastException exception)
+            {
+                Console.WriteLine(new StringBuilder(exception.ToString()));
+                return new Node<T>[default];
+            }
         }
 
         public T? GetFirstElement()
