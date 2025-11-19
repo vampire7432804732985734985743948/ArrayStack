@@ -1,18 +1,44 @@
-﻿using Problem.Stack;
-using Problem.graph;
-using Problem.Dictionary;
-using Problem.List;
-using Problem;
-using System.Numerics;
-using System.Net.Http.Headers;
+﻿using Problem.Functions;
+using Problem.Lab1;
+using Problem.Lab1.IntegralCalculations;
+using Problem.Lab1.IntegralCalculations.Factory;
+using Problem.Lab2;
+using Problem.Lab3;
+using System.ComponentModel;
 
-Problem.List.Vector<int> values = new Problem.List.Vector<int>() {2,4,7,9,5,1};
 
-values.Sort();
-values.ShowData();
+static void SetDelay(BackgroundWorkerInstantiator worker)
+{
+    if (worker != null)
+    {
+        while (true)
+        {
+            if (worker.AllWorkersCompleted())
+                break;
+            Thread.Sleep(1000);
+        }
+    }
+}
 
-Problem.List.Vector<int> values1 = new Problem.List.Vector<int>() { 2, 4, 7, 9, 53, 131 };
-Console.WriteLine("______________");
-values = values.Union(values1);
+Console.WriteLine("Choose BackgroundWorker: Q");
+Console.WriteLine("Choose TPL: W");
+ConsoleKey choice = Console.ReadKey().Key;
+List<IFunctionDeterminable> functions = new List<IFunctionDeterminable>
+{
+    new LinearFuction(),
+    new QuadraticFunction(),
+    new SinFunction(),
+};
+switch (choice)
+{
+    case ConsoleKey.Q:
+    break;
+    case ConsoleKey.W:
+        TPLTaskSolution integralAreaCalculation = new TPLTaskSolution();
+        await integralAreaCalculation.CalculateIntegralsAsync(functions, IntegrationAlgorithm.Midpoint);
+    break;
 
-values.ShowData();
+}
+
+
+Console.WriteLine("\nAll calculations completed.");
