@@ -1,91 +1,84 @@
 ﻿using Problem.Functions;
 using Problem.Lab1;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Problem.Lab2
 {
     internal class BackgroundWorkerInstantiator
     {
-        private (double start, double end, string name)[] ranges =
+        private readonly List<(double start, double end, string name)> _ranges;
+        private readonly List<BackgroundWorker> _workers = new();
+
+        public BackgroundWorkerInstantiator(IEnumerable<(double start, double end, string name)> ranges)
         {
-            (0, 10, "Range 1"),
-            (3, 12, "Range 2"),
-            (5, 14, "Range 3")
-        };
-        private BackgroundWorker[] workers = new BackgroundWorker[3];
-        public void InitializeWorker()
+            _ranges = ranges.ToList();
+        }
+
+        public void InitializeWorkers()
         {
-            for (int i = 0; i < workers.Length; i++)
+            foreach (var _ in _ranges)
             {
-                workers[i] = new BackgroundWorker
+                var worker = new BackgroundWorker()
                 {
                     WorkerReportsProgress = true,
-                    WorkerSupportsCancellation = true
+                    WorkerSupportsCancellation = false
                 };
-                workers[i].DoWork += Worker_DoWork;
-                workers[i].ProgressChanged += Worker_ProgressChanged;
-                workers[i].RunWorkerCompleted += Worker_RunWorkerCompleted;
+
+                worker.DoWork += Worker_DoWork;
+                worker.ProgressChanged += Worker_ProgressChanged;
+                worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+
+                _workers.Add(worker);
             }
         }
-        public void AssignFunction(IFunctionDeterminable fuction)
+
+        public void Run(IFunctionDeterminable function, int iterations)
         {
-            for (int i = 0; i < workers.Length; i++)
+            for (int i = 0; i < _ranges.Count; i++)
             {
-                workers[i].RunWorkerAsync(new WorkerParameters
+                var (start, end, name) = _ranges[i];
+
+                _workers[i].RunWorkerAsync(new WorkerParameters
                 {
-                    Start = ranges[i].start,
-                    End = ranges[i].end,
-                    Iterations = 100000,
-                    Function = fuction,
-                    RangeName = ranges[i].name
+                    Start = start,
+                    End = end,
+                    Iterations = iterations,
+                    Function = function,
+                    RangeName = name
                 });
             }
         }
+
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker worker = (BackgroundWorker)sender;
-            WorkerParameters param = (WorkerParameters)e.Argument;
+            var p = (WorkerParameters)e.Argument;
+            var worker = (BackgroundWorker)sender;
 
-            NumericalDetermination nd = new NumericalDetermination
+            const int stepCount = 10;
+            int stepIterations = p.Iterations / stepCount;
+            double segment = (p.End - p.Start) / stepCount;
+
+            double total = 0;
+
+            for (int i = 0; i < stepCount; i++)
             {
-                StartPosition = param.Start,
-                EndPosition = param.End,
-                NumberOfIterations = param.Iterations
-            };
+                double s = p.Start + i * segment;
+                double ep = s + segment;
 
-            int step = param.Iterations / 10; 
-
-            double totalArea = 0;
-            double partialResult = 0;
-
-            for (int i = 0; i < 10; i++)
-            {
-                if (worker.CancellationPending)
+                var calc = new NumericalDetermination(s, ep, stepIterations)
                 {
-                    e.Cancel = true;
-                    return;
-                }
-
-                NumericalDetermination numericalDeterminationPartial = new NumericalDetermination
-                {
-                    StartPosition = nd.StartPosition + i * step * ((nd.EndPosition - nd.StartPosition) / nd.NumberOfIterations),
-                    EndPosition = nd.StartPosition + (i + 1) * step * ((nd.EndPosition - nd.StartPosition) / nd.NumberOfIterations),
-                    NumberOfIterations = step
+                    StartPosition = s,
+                    EndPosition = ep,
+                    NumberOfIterations = stepIterations
                 };
 
-                partialResult = numericalDeterminationPartial.GetIntegralAreaByTrapezoid(param.Function);
-                totalArea += partialResult;
-
-                int progress = (i + 1) * 10;
-                worker.ReportProgress(progress, param.RangeName);
+                total += calc.GetIntegralAreaByTrapezoid(p.Function);
+                worker.ReportProgress((i + 1) * 10, p.RangeName);
             }
 
-            e.Result = new { param.RangeName, Result = totalArea };
+            e.Result = new { p.RangeName, Result = total };
         }
 
         private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -95,22 +88,12 @@ namespace Problem.Lab2
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (!e.Cancelled)
-            {
-                var result = (dynamic)e.Result;
-                Console.WriteLine($"{result.RangeName} result = {result.Result:F6}");
-            }
+            if (e.Result is null) return;
+
+            var r = (dynamic)e.Result;
+            Console.WriteLine($"{r.RangeName} result = {r.Result:F6}");
         }
 
-        public bool AllWorkersCompleted()
-        {
-            foreach (var w in workers)
-            {
-                if (w.IsBusy)
-                    return false;
-            }
-            return true;
-        }
-
+        public bool AllWorkersCompleted() => _workers.All(w => !w.IsBusy);
     }
 }

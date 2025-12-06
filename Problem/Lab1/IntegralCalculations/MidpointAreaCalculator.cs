@@ -16,7 +16,7 @@ internal class MidpointAreaCalculator : FunctionAreaDeterminator
         {
             double x = StartPosition + (i + 0.5) * width;
             totalArea += function.DetermineFunction(x) * width;
-
+            XPoints.Add(x);
             int percent = (i + 1) * 100 / NumberOfIterations;
             if (percent % percentDivide == 0) Progress?.Report(percent);
         }

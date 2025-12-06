@@ -17,7 +17,7 @@ internal class IntergralAreaCalculator : FunctionAreaDeterminator
         {
             totalArea += function.DetermineFunction(currentPosition) * width;
             currentPosition += width;
-
+            XPoints.Add(currentPosition);
             int percent = (i + 1) * 100 / NumberOfIterations;
             if (percent % percentDivide == 0) Progress?.Report(percent);
         }

@@ -1,44 +1,68 @@
 ﻿using Problem.Functions;
-using Problem.Lab1;
-using Problem.Lab1.IntegralCalculations;
 using Problem.Lab1.IntegralCalculations.Factory;
 using Problem.Lab2;
 using Problem.Lab3;
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-
-static void SetDelay(BackgroundWorkerInstantiator worker)
+class Program
 {
-    if (worker != null)
+    static async Task Main()
     {
-        while (true)
+        var functions = new List<IFunctionDeterminable>
         {
-            if (worker.AllWorkersCompleted())
+            new LinearFuction(),
+            new QuadraticFunction(),
+            new SinFunction()
+        };
+
+        var ranges = new List<(double start, double end, string name)>
+        {
+            (0, 10,  "Range 1"),
+            (3, 12,  "Range 2"),
+            (5, 14,  "Range 3")
+        };
+
+        Console.WriteLine("Select processing method:");
+        Console.WriteLine("Q: BackgroundWorker");
+        Console.WriteLine("W: TPL");
+        ConsoleKey key = Console.ReadKey(true).Key;
+
+        switch (key)
+        {
+            case ConsoleKey.Q:
+                Console.WriteLine("Worker selected");
+                foreach (var f in functions)
+                    await RunWorkersForFunction(f, ranges);
+
                 break;
-            Thread.Sleep(1000);
+
+            case ConsoleKey.W:
+                Console.WriteLine("TPL selected");
+                var tplProcessor = new TPLTaskSolution();
+                await tplProcessor.CalculateIntegralsAsync(functions, IntegrationAlgorithm.Midpoint);
+                Console.WriteLine("TPL calculations completed.");
+                break;
+
+            default:
+                Console.WriteLine("Unknown option selected.");
+                break;
         }
+
+        Console.WriteLine("\nAll calculations finished.");
+        Console.WriteLine("Press any key to exit...");
+        Console.ReadKey();
+    }
+
+    static async Task RunWorkersForFunction(IFunctionDeterminable function,
+                                            List<(double start, double end, string name)> ranges)
+    {
+        var bw = new BackgroundWorkerInstantiator(ranges);
+        bw.InitializeWorkers();
+        bw.Run(function, 100000);
+
+        while (!bw.AllWorkersCompleted())
+            await Task.Delay(100);
     }
 }
-
-Console.WriteLine("Choose BackgroundWorker: Q");
-Console.WriteLine("Choose TPL: W");
-ConsoleKey choice = Console.ReadKey().Key;
-List<IFunctionDeterminable> functions = new List<IFunctionDeterminable>
-{
-    new LinearFuction(),
-    new QuadraticFunction(),
-    new SinFunction(),
-};
-switch (choice)
-{
-    case ConsoleKey.Q:
-    break;
-    case ConsoleKey.W:
-        TPLTaskSolution integralAreaCalculation = new TPLTaskSolution();
-        await integralAreaCalculation.CalculateIntegralsAsync(functions, IntegrationAlgorithm.Midpoint);
-    break;
-
-}
-
-
-Console.WriteLine("\nAll calculations completed.");

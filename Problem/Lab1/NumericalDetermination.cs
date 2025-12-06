@@ -1,99 +1,112 @@
 ﻿using Problem.Functions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Problem.Lab1
 {
     public class NumericalDetermination
     {
-        private const double START_POSITION = 0;
-        private double _endPosition;
-        public double EndPosition
+        private double _start;
+        private double _end;
+        private int _iterations;
+
+        public double StartPosition
         {
-            get { return _endPosition; }
-            set 
+            get => _start;
+            set
             {
-                if (value < START_POSITION) 
-                {
-                    throw new ArgumentException("Incorrect range");
-                }
-                else
-                {
-                    _endPosition = value;
-                }
+                if (value >= EndPosition)
+                    throw new ArgumentException("Start must be less than End.");
+                _start = value;
             }
         }
 
-        private int _numberOfIterations;
+        public double EndPosition
+        {
+            get => _end;
+            set
+            {
+                if (value <= StartPosition)
+                    throw new ArgumentException("End must be greater than Start.");
+                _end = value;
+            }
+        }
 
         public int NumberOfIterations
         {
-            get { return _numberOfIterations; }
+            get => _iterations;
             set
             {
-                if (value < 0)
-                {
-                    throw new ArgumentException("Inappropriate number of itterations");
-                }
-                else
-                {
-                    _numberOfIterations = value; 
-                }
+                if (value <= 0)
+                    throw new ArgumentException("Iterations must be positive.");
+                _iterations = value;
             }
         }
-        public double GetIntegralAreaByTrapezoid(IFuctionDeterminable function)
-        {
-            double totalArea = 0;
-            double width = (_endPosition - START_POSITION) / _numberOfIterations;
 
-            for (int i = 0; i < _numberOfIterations; i++)
+        public NumericalDetermination(double start, double end, int iterations)
+        {
+            if (start >= end)
+                throw new ArgumentException("Start must be less than End.");
+            if (iterations <= 0)
+                throw new ArgumentException("Iterations must be > 0.");
+
+            _start = start;
+            _end = end;
+            _iterations = iterations;
+        }
+
+        // -------------------------
+        //  INTEGRATION METHODS
+        // -------------------------
+
+        public double GetIntegralAreaByTrapezoid(IFunctionDeterminable f)
+        {
+            double width = (_end - _start) / _iterations;
+            double sum = 0;
+
+            for (int i = 0; i < _iterations; i++)
             {
-                double x0 = START_POSITION + i * width;
+                double x0 = _start + i * width;
                 double x1 = x0 + width;
 
-                double area = (function.DetermineFunction(x0) + function.DetermineFunction(x1)) / 2 * width;
-                totalArea += area;
+                sum += (f.DetermineFunction(x0) + f.DetermineFunction(x1)) * 0.5 * width;
             }
 
-            return totalArea;
+            return sum;
         }
-        public double GetIntegralAreaByMidpoint(IFuctionDeterminable function, EvaluationPoint point)
-        {
-            double totalArea = 0;
-            double width = (_endPosition - START_POSITION) / _numberOfIterations;
 
-            for (int i = 0; i < _numberOfIterations; i++)
+        public double IntegrateMidpoint(IFunctionDeterminable f, EvaluationPoint point)
+        {
+            double width = (_end - _start) / _iterations;
+            double sum = 0;
+
+            for (int i = 0; i < _iterations; i++)
             {
                 double x = point switch
                 {
-                    EvaluationPoint.Left => START_POSITION + i * width,
-                    EvaluationPoint.Right => START_POSITION + (i + 1) * width,
-                    EvaluationPoint.Mid => START_POSITION + (i + 0.5) * width
+                    EvaluationPoint.Left => _start + i * width,
+                    EvaluationPoint.Right => _start + (i + 1) * width,
+                    EvaluationPoint.Mid => _start + (i + 0.5) * width,
+                    _ => throw new ArgumentException("Unknown evaluation point")
                 };
 
-                totalArea += function.DetermineFunction(x) * width;
+                sum += f.DetermineFunction(x) * width;
             }
 
-            return totalArea;
+            return sum;
         }
-        public double GetIntergalArea(IFuctionDeterminable fuctionDeterminable)
+
+        public double IntegrateRectangle(IFunctionDeterminable f)
         {
+            double width = (_end - _start) / _iterations;
+            double sum = 0;
 
-            double currentPosition = START_POSITION;
-            double totalArea = 0;
-            double width = (_endPosition - START_POSITION) / _numberOfIterations;
-
-            double currentHeight;
-            for (int i = 0; i < _numberOfIterations; i++)
+            for (int i = 0; i < _iterations; i++)
             {
-                currentHeight = fuctionDeterminable.DetermineFunction(currentPosition);
-                totalArea += currentHeight * width;
-                currentPosition += width;
+                double x = _start + i * width;
+                sum += f.DetermineFunction(x) * width;
             }
-            return totalArea;
+
+            return sum;
         }
     }
 }

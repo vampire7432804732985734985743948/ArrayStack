@@ -17,6 +17,9 @@ internal class TrapezoidalAreaCalculator : FunctionAreaDeterminator
             double x0 = StartPosition + i * width;
             double x1 = x0 + width;
 
+            if (!XPoints.Contains(x0)) XPoints.Add(x0);
+            XPoints.Add(x1);
+
             totalArea += (function.DetermineFunction(x0) + function.DetermineFunction(x1)) / 2 * width;
 
             int percent = (i + 1) * 100 / NumberOfIterations;
