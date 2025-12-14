@@ -1,5 +1,6 @@
 ﻿using Problem.Functions;
 using Problem.Lab1.IntegralCalculations;
+using System.Threading.Tasks;
 
 internal class IntergralAreaCalculator : FunctionAreaDeterminator
 {
@@ -11,16 +12,29 @@ internal class IntergralAreaCalculator : FunctionAreaDeterminator
         IFunctionDeterminable function = integralMethodRequest.Function;
         double totalArea = 0;
         double width = (EndPosition - StartPosition) / NumberOfIterations;
-        double currentPosition = StartPosition;
         int percentDivide = 10;
-        for (int i = 0; i < NumberOfIterations; i++)
+
+        object areaLock = new object();
+        object pointLock = new object();
+
+        Parallel.For(0, NumberOfIterations, i =>
         {
-            totalArea += function.DetermineFunction(currentPosition) * width;
-            currentPosition += width;
-            XPoints.Add(currentPosition);
+            double x = StartPosition + i * width;
+            double y = function.DetermineFunction(x);
+
+            lock (pointLock)
+            {
+                XPoints.Add(x);
+                YPoints.Add(y);
+            }
+
+            lock (areaLock)
+            {
+                totalArea += y * width;
+            }
             int percent = (i + 1) * 100 / NumberOfIterations;
             if (percent % percentDivide == 0) Progress?.Report(percent);
-        }
+        });
 
         return totalArea;
     }

@@ -6,6 +6,7 @@ public abstract class FunctionAreaDeterminator
     protected double _endPosition;
     protected int _numberOfIterations;
     protected List<double> XPoints = new List<double>();
+    protected List<double> YPoints = new List<double>();
 
     public double StartPosition
     {
@@ -37,8 +38,8 @@ public abstract class FunctionAreaDeterminator
         }
     }
 
-    // Optional progress reporter for all calculators
     public IProgress<double>? Progress { get; set; }
-    public List<double> GetXPoint() => XPoints;
+    public List<double> GetXPoints() => XPoints;
+    public List<double> GetYPoints() => YPoints;
     public abstract double GetIntegral(IntegralMethodRequest integralMethodRequest);
 }

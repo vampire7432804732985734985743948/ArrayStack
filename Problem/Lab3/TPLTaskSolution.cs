@@ -2,11 +2,12 @@
 using Problem.Lab1;
 using Problem.Lab1.IntegralCalculations;
 using Problem.Lab1.IntegralCalculations.Factory;
+using Problem.Lab4;
+using Problem.StudentDataBase.TechnicalStuff;
+using ScottPlot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Problem.Lab3
 {
@@ -14,7 +15,7 @@ namespace Problem.Lab3
     {
         public async Task CalculateIntegralsAsync(List<IFunctionDeterminable> functions, IntegrationAlgorithm integralCalculationAlgorithm)
         {
-            Console.WriteLine($"Calculation method: {integralCalculationAlgorithm.ToString()}");
+            ConsoleInterfaceManager.DrawColoredText($"Calculation method: {integralCalculationAlgorithm.ToString()}", ConsoleColor.Green);
 
             IProgress<string> progress = new Progress<string>(message =>
             {
@@ -30,9 +31,11 @@ namespace Problem.Lab3
                 IProgress<double> taskProgress = new Progress<double>(p =>
                 {
                     progress.Report($"{f.Name}: {p}% completed");
+                    
                 });
 
                 var calculator = SetCalculationAlgorithm(integralCalculationAlgorithm);
+
 
                 calculator.StartPosition = start;
                 calculator.EndPosition = end;
@@ -43,12 +46,16 @@ namespace Problem.Lab3
 
                 progress.Report($"Finished {f.Name}, Result = {result}");
 
+                FunctionImageProvider functionImageProvider = new FunctionImageProvider(calculator.GetXPoints(), calculator.GetYPoints());
+                Plot plots = functionImageProvider.GeneratePlot(f);
+                functionImageProvider.SavePlot(plots, f.Name, 800, 600);
+
                 return result;
             })).ToArray();
 
             await Task.WhenAll(tasks);
 
-            Console.WriteLine("All calculations completed.");
+            ConsoleInterfaceManager.DrawColoredText("All calculations completed.", ConsoleColor.Green);
         }
 
         public FunctionAreaDeterminator SetCalculationAlgorithm(IntegrationAlgorithm algorithm)
