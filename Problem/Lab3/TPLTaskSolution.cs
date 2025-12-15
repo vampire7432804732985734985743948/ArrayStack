@@ -13,6 +13,42 @@ namespace Problem.Lab3
 {
     internal class TPLTaskSolution
     {
+        public double Start { get; private set; }
+
+        private double _end;
+
+        public double End
+        {
+            get { return _end; }
+            private set 
+            { 
+                if (value <= Start)
+                {
+                    throw new ArgumentException("End position must be greater than start position.");
+                }
+                _end = value; 
+            }
+        }
+        private int _iterations;
+
+        public int Iterations
+        {
+            get { return _iterations; }
+            private set
+            { 
+                if (value <= 0)
+                {
+                    throw new ArgumentException("Number of iterations must be positive.");
+                }
+                _iterations = value;
+            }
+        }
+        public TPLTaskSolution(double start, double end, int iterations)
+        {
+            Start = start;
+            End = end;
+            Iterations = iterations;
+        }
         public async Task CalculateIntegralsAsync(List<IFunctionDeterminable> functions, IntegrationAlgorithm integralCalculationAlgorithm)
         {
             ConsoleInterfaceManager.DrawColoredText($"Calculation method: {integralCalculationAlgorithm.ToString()}", ConsoleColor.Green);
@@ -24,9 +60,6 @@ namespace Problem.Lab3
 
             var tasks = functions.Select(f => Task.Run(() =>
             {
-                double start = 0;
-                double end = 10;
-                int iterations = 100;
 
                 IProgress<double> taskProgress = new Progress<double>(p =>
                 {
@@ -37,9 +70,9 @@ namespace Problem.Lab3
                 var calculator = SetCalculationAlgorithm(integralCalculationAlgorithm);
 
 
-                calculator.StartPosition = start;
-                calculator.EndPosition = end;
-                calculator.NumberOfIterations = iterations;
+                calculator.StartPosition = Start;
+                calculator.EndPosition = _end;
+                calculator.NumberOfIterations = _iterations;
                 calculator.Progress = taskProgress;
 
                 double result = calculator.GetIntegral(new IntegralMethodRequest(f));

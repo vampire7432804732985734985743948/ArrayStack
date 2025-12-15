@@ -2,6 +2,7 @@
 using Problem.Lab1.IntegralCalculations.Factory;
 using Problem.Lab3;
 using Problem.Lab4;
+using Problem.StudentDataBase.TechnicalStuff;
 using ScottPlot;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,11 @@ class Program
             new QuadraticFunction(),
             new DirectProportionalityFunction(),
         };
-        var tplProcessor = new TPLTaskSolution();
+        double start = ConsoleInterfaceManager.ReadDouble("Enter the start of the interval: ");
+        double end = ConsoleInterfaceManager.ReadDouble("Enter the end of the interval: ");
+        int iterations = ConsoleInterfaceManager.ReadInt("Enter the number of iterations: ");
+
+        var tplProcessor = new TPLTaskSolution(start, end, iterations);
         await tplProcessor.CalculateIntegralsAsync(functions, IntegrationAlgorithm.Midpoint);
     }
 }
